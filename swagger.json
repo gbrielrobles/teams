@@ -1,0 +1,118 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Times de Futebol",
+    "version": "1.0.0",
+    "description": "API para consulta de times de futebol com filtros, ordenação e paginação. Todos os campos e respostas estão em português."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "paths": {
+    "/teams": {
+      "get": {
+        "summary": "Listar times com filtros, ordenação e paginação",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 }, "description": "Número da página" },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 10 }, "description": "Quantidade de itens por página" },
+          { "name": "sort", "in": "query", "schema": { "type": "string", "default": "nome", "enum": ["id", "nome", "nome_curto", "sigla", "fundado", "estadio", "cores_clube", "nome_area"] }, "description": "Campo para ordenação" },
+          { "name": "order", "in": "query", "schema": { "type": "string", "default": "asc", "enum": ["asc", "desc"] }, "description": "Ordem de ordenação (ascendente ou descendente)" },
+          { "name": "id", "in": "query", "schema": { "type": "string" }, "description": "Filtrar por id" },
+          { "name": "nome", "in": "query", "schema": { "type": "string" }, "description": "Filtrar por nome do time" },
+          { "name": "nome_curto", "in": "query", "schema": { "type": "string" }, "description": "Filtrar por nome curto" },
+          { "name": "sigla", "in": "query", "schema": { "type": "string" }, "description": "Filtrar por sigla (TLA)" },
+          { "name": "fundado", "in": "query", "schema": { "type": "string" }, "description": "Filtrar por ano de fundação" },
+          { "name": "estadio", "in": "query", "schema": { "type": "string" }, "description": "Filtrar por estádio" },
+          { "name": "cores_clube", "in": "query", "schema": { "type": "string" }, "description": "Filtrar por cores do clube" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de times",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "dados": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Time" }
+                    },
+                    "paginacao": {
+                      "$ref": "#/components/schemas/Paginacao"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/teams/{id}": {
+      "get": {
+        "summary": "Buscar time por ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "description": "ID do time" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Time encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Time" }
+              }
+            }
+          },
+          "404": {
+            "description": "Time não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Time": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "description": "ID do time" },
+          "nome": { "type": "string", "description": "Nome do time" },
+          "nome_curto": { "type": "string", "description": "Nome curto do time" },
+          "sigla": { "type": "string", "description": "Sigla (TLA) do time" },
+          "escudo": { "type": "string", "description": "URL do escudo do time" },
+          "estadio": { "type": "string", "description": "Nome do estádio" },
+          "cores_clube": { "type": "string", "description": "Cores do clube" },
+          "nome_area": { "type": "string", "description": "Nome da área/país" },
+          "codigo_area": { "type": "string", "description": "Código da área/país" },
+          "bandeira_area": { "type": "string", "description": "URL da bandeira da área/país" },
+          "fundado": { "type": "integer", "description": "Ano de fundação" },
+          "endereco": { "type": "string", "description": "Endereço do time" },
+          "site": { "type": "string", "description": "Site oficial do time" }
+        }
+      },
+      "Paginacao": {
+        "type": "object",
+        "properties": {
+          "total": { "type": "integer", "description": "Total de times encontrados" },
+          "totalPaginas": { "type": "integer", "description": "Total de páginas" },
+          "paginaAtual": { "type": "integer", "description": "Página atual" },
+          "limite": { "type": "integer", "description": "Limite de itens por página" },
+          "temProximaPagina": { "type": "boolean", "description": "Se existe próxima página" },
+          "temPaginaAnterior": { "type": "boolean", "description": "Se existe página anterior" }
+        }
+      }
+    }
+  }
+} 
