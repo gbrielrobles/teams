@@ -47,24 +47,3 @@ const server = app.listen(PORT, async () => {
     const db = new Database();
     await db.testConnection();
 });
-
-// Graceful shutdown
-process.on('SIGTERM', async () => {
-    console.log('👋 SIGTERM received. Shutting down gracefully...');
-    const db = new Database();
-    await db.close();
-    server.close(() => {
-        console.log('🔒 Server closed');
-        process.exit(0);
-    });
-});
-
-process.on('SIGINT', async () => {
-    console.log('👋 SIGINT received. Shutting down gracefully...');
-    const db = new Database();
-    await db.close();
-    server.close(() => {
-        console.log('🔒 Server closed');
-        process.exit(0);
-    });
-});

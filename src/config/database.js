@@ -1,8 +1,6 @@
 const { Pool } = require('pg');
 
-/**
- * Database configuration and connection management
- */
+
 class Database {
     constructor() {
         this.config = {
@@ -18,19 +16,11 @@ class Database {
         
         this.pool = new Pool(this.config);
         
-        // Pool error listener
         this.pool.on('error', (err) => {
             console.error('❌ Unexpected pool error:', err);
         });
     }
 
-    /**
-     * Execute a database query
-     * @param {string} text - SQL query text
-     * @param {Array} params - Query parameters
-     * @returns {Promise<Object>} Query result
-     * @throws {Error} If query execution fails
-     */
     async query(text, params) {
         const client = await this.pool.connect();
         try {
@@ -44,10 +34,6 @@ class Database {
         }
     }
 
-    /**
-     * Get a database client from the pool
-     * @returns {Promise<Object>} Database client
-     */
     async getClient() {
         try {
             return await this.pool.connect();
@@ -56,10 +42,6 @@ class Database {
         }
     }
 
-    /**
-     * Test database connection
-     * @returns {Promise<boolean>} Connection status
-     */
     async testConnection() {
         try {
             const result = await this.query('SELECT NOW()');
@@ -72,10 +54,7 @@ class Database {
         }
     }
 
-    /**
-     * Close all database connections
-     * @returns {Promise<void>}
-     */
+   
     async close() {
         try {
             await this.pool.end();

@@ -1,14 +1,7 @@
 const Team = require('../models/Team');
 
-/**
- * Controller for handling team-related operations
- */
+
 class TeamController {
-    /**
-     * List all teams with pagination and filtering
-     * @param {Object} req - Express request object
-     * @param {Object} res - Express response object
-     */
     async index(req, res) {
         try {
             const { page, limit, sort, order, ...filters } = req.query;
@@ -41,11 +34,7 @@ class TeamController {
         }
     }
 
-    /**
-     * Get a specific team by ID
-     * @param {Object} req - Express request object
-     * @param {Object} res - Express response object
-     */
+
     async show(req, res) {
         try {
             const { id } = req.params;

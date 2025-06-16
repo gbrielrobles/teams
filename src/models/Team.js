@@ -1,8 +1,6 @@
 const Database = require('../config/database');
 
-/**
- * Color mapping between English and Portuguese
- */
+
 const COLOR_MAPPINGS = {
     white: 'branco',
     black: 'preto',
@@ -25,11 +23,7 @@ const REVERSE_COLOR_MAPPINGS = Object.fromEntries(
     Object.entries(COLOR_MAPPINGS).map(([en, pt]) => [pt, en])
 );
 
-/**
- * Translates colors from English to Portuguese
- * @param {string} colors - Colors string in English
- * @returns {string} Colors string in Portuguese
- */
+
 function translateColors(colors) {
     if (!colors) return colors;
     return colors.split(/[\/]|,|\s*\/\s*/)
@@ -40,29 +34,18 @@ function translateColors(colors) {
         .join(' / ');
 }
 
-/**
- * Translates a color from Portuguese to English
- * @param {string} colorPt - Color in Portuguese
- * @returns {string} Color in English
- */
+
 function translateToEnglish(colorPt) {
     const cleanColor = colorPt.trim().toLowerCase();
     return REVERSE_COLOR_MAPPINGS[cleanColor] || colorPt;
 }
 
-/**
- * Team model for handling team-related database operations
- */
+
 class Team {
     constructor() {
         this.database = new Database();
     }
 
-    /**
-     * Maps database row to Portuguese field names
-     * @param {Object} row - Database row
-     * @returns {Object|null} Mapped object or null
-     */
     mapToPortuguese(row) {
         if (!row) return null;
         return {
@@ -79,11 +62,7 @@ class Team {
         };
     }
 
-    /**
-     * Returns the mapping between Portuguese and English column names
-     * @returns {Object} Column mapping
-     */
-    getColumnMap() {
+    getAllColumnMap() {
         return {
             id: 'id',
             nome: 'name',
@@ -98,19 +77,9 @@ class Team {
         };
     }
 
-    /**
-     * Finds all teams with pagination and filtering
-     * @param {Object} options - Query options
-     * @param {number} options.page - Page number
-     * @param {number} options.limit - Items per page
-     * @param {string} options.sort - Sort field
-     * @param {string} options.order - Sort order
-     * @param {Object} options.filters - Filter criteria
-     * @returns {Promise<Object>} Paginated results
-     */
-    async findAll({ page = 1, limit = 10, sort = 'nome', order = 'asc', filters = {} }) {
+    async findAll({ page = 1, limit = 10, sort = 'nome', order = 'ASC', filters = {} }) {
         const offset = (page - 1) * limit;
-        const columnMap = this.getColumnMap();
+        const columnMap = this.getAllColumnMap();
         let query = `SELECT * FROM teams`;
         const queryParams = [];
         const whereConditions = [];
@@ -179,11 +148,7 @@ class Team {
         }
     }
 
-    /**
-     * Finds a team by ID
-     * @param {number|string} id - Team ID
-     * @returns {Promise<Object|null>} Team data or null
-     */
+    
     async findById(id) {
         if (!id) {
             throw new Error('Team ID is required');
